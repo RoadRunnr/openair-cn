@@ -1679,6 +1679,7 @@ gtpv2c_apn_plmn_ie_set (
   uint8_t                                *value;
   uint8_t                                 apn_length;
   uint8_t                                *last_size;
+  uint8_t                                 word_length = 0;
 
   DevAssert (serving_network );
 
@@ -1686,7 +1687,6 @@ gtpv2c_apn_plmn_ie_set (
   DevAssert (msg );
   apn_length = strlen (apn);
   value = calloc (apn_length + 20, sizeof (uint8_t)); //"default" + neu: ".mncXXX.mccXXX.gprs"
-  last_size = &value[0];
 
   memcpy(&value[1], apn, apn_length);
   memcpy(&value[apn_length + 1], ".mnc", 4);
@@ -1708,7 +1708,20 @@ gtpv2c_apn_plmn_ie_set (
   value[apn_length + 13] = serving_network->mcc[1] + '0';
   value[apn_length + 14] = serving_network->mcc[2] + '0';
 
-  *last_size = apn_length + 19;
+  last_size = &value[0];
+  for (int offset = 1; offset < apn_length + 20; offset++) {
+    /*
+     * We replace the . by the length of the word
+     */
+    if (value[offset] == '.') {
+      *last_size = word_length;
+      word_length = 0;
+      last_size = &value[offset];
+    } else
+      word_length++;
+  }
+  *last_size = word_length;
+
   rc = nwGtpv2cMsgAddIe (*msg, NW_GTPV2C_IE_APN, apn_length + 20, 0, value);
   DevAssert (NW_OK == rc);
   free_wrapper ((void**) &value);

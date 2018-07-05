@@ -43,6 +43,15 @@
 
 #define AUTH_MAX_EUTRAN_VECTORS 6
 
+static inline is_zero(uint8_t * buffer, int length)
+{
+  for (int i = 0; i < length; i++)
+    if (buffer[i] !=0)
+      return 0;
+
+  return 1;
+}
+
 extern hss_config_t hss_config;
 int
 s6a_auth_info_cb (
@@ -298,7 +307,9 @@ s6a_auth_info_cb (
       /*
        * Generate authentication vector
        */
-      ComputeOPc (auth_info_resp.key, hss_config.operator_key_bin, auth_info_resp.opc);
+      if (is_zero(auth_info_resp.opc))
+	ComputeOPc (auth_info_resp.key, hss_config.operator_key_bin, auth_info_resp.opc);
+
       print_buffer ("opc      : ", auth_info_resp.opc, 16);
       generate_vector (auth_info_resp.opc, imsi, auth_info_resp.key, hdr->avp_value->os.data, sqn, &vector[i]);
     }

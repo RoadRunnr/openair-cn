@@ -62,6 +62,15 @@ print_buffer (
   fprintf (stdout, "\n");
 }
 
+static inline is_zero(uint8_t * buffer, int length)
+{
+  for (int i = 0; i < length; i++)
+    if (buffer[i] !=0)
+      return 0;
+
+  return 1;
+}
+
 int
 hss_mysql_connect (
   const hss_config_t * hss_config_p)
@@ -620,10 +629,10 @@ hss_mysql_check_opc_keys (
         print_buffer ("Key: ", (uint8_t *) row[1], KEY_LENGTH);
         memcpy (k, row[1], KEY_LENGTH);
       }
-      //if (row[3] != NULL)
+      if (row[2] != NULL && !is_zero((uint8_t *) row[2], KEY_LENGTH))
       {
         print_buffer ("OPc: ", (uint8_t *) row[2], KEY_LENGTH);
-        //} else {
+      } else {
         ComputeOPc (k, opP, opc);
         update_length = sprintf (update, "UPDATE `users` SET `OPc`=UNHEX('");
 

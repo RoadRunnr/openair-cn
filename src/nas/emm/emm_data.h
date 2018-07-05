@@ -318,7 +318,7 @@ void emm_ctx_set_valid_imeisv(emm_data_context_t * const ctxt, imeisv_t *imeisv)
 
 void emm_ctx_clear_lvr_tai(emm_data_context_t * const ctxt) __attribute__ ((nonnull)) __attribute__ ((flatten));
 void emm_ctx_set_lvr_tai(emm_data_context_t * const ctxt, tai_t *lvr_tai) __attribute__ ((nonnull)) __attribute__ ((flatten));
-void emm_ctx_set_valid_lvr_tai(emm_data_context_t * const ctxt, tai_t *lvr_tai) __attribute__ ((nonnull)) __attribute__ ((flatten));
+void emm_ctx_set_valid_lvr_tai(emm_data_context_t * const ctxt, tai_t *lvr_tai) __attribute__ ((flatten));
 
 void emm_ctx_clear_auth_vectors(emm_data_context_t * const ctxt) __attribute__ ((nonnull)) __attribute__ ((flatten));
 void emm_ctx_clear_auth_vector(emm_data_context_t * const ctxt, ksi_t eksi) __attribute__ ((nonnull)) __attribute__ ((flatten));
